@@ -44,7 +44,11 @@
       setTimeout(function function_name(argument) {
         var dw = $('#display-image').width();
         var dh = $('#display-image').height();
-        $('#cmyk, #dl-img').css({'height':dh, 'width':dw});
+        var bw = dw * 0.15;
+        var bh = bw * .25;
+        $('#cmyk, #dl-img').attr('height',dh).attr('width',dw);
+        $('#cmyk').css({'left':dw-bw-10+'px', 'top':170+dh-bh});
+        $('#cmyk>img').toggle().css({'width':bw, 'height':bh});
       }, 50);
       
     });
@@ -59,9 +63,11 @@
       font-weight: 600;
       text-transform: uppercase;
     }
+
     #cmyk>img {
       margin: 0 10px 10px 0;
       min-width: 50px;
+      display: none;
     }
 
     .hero>img {
@@ -91,10 +97,6 @@
       top: 180px; 
       position: absolute; 
       max-width: calc(100% - 6em);
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      justify-content: flex-end;
       z-index: 200;
     }
 
@@ -103,7 +105,6 @@
       top: 180px; 
       position: absolute;
       max-width: calc(100% - 6em);
-      border: 1px solid black;
       z-index: 100;
       filter: saturate(0.75) contrast(1.1);
       margin-bottom: 5em;
@@ -125,11 +126,13 @@
   </style>
 
   <script type="text/javascript">
-    var w = $('#cmyk').width() * 0.125;
-    $('#cmyk>img').css('width', w + 'px');
-    $('body').css('height',(window.outerHeight+80)+'px');
-
     function imgGen () {
+      var dw = $('#display-image').width();
+      var dh = $('#display-image').height();
+      var bw = dw * 0.15;
+      var bh = bw * .25;
+      $('#dl-img').attr('height',dh).attr('width', dw);
+
       var img = document.getElementById('display-image');
       var img2 = document.getElementById('cmykImg');
       const myCanvas = document.getElementById('dl-img');
@@ -137,55 +140,10 @@
       const originalWidth = myCanvas.width;
       render();
       function render() {
-        let dimensions = getObjectFitSize(
-          true,
-          myCanvas.clientWidth,
-          myCanvas.clientHeight,
-          myCanvas.width,
-          myCanvas.height
-        );
-        const dpr = window.devicePixelRatio || 1;
-        myCanvas.width = dimensions.width * dpr;
-        myCanvas.height = dimensions.height * dpr;
-
         let ctx = myCanvas.getContext('2d');
-        let ratio = Math.min(
-          myCanvas.clientWidth / originalWidth,
-          myCanvas.clientHeight / originalHeight
-        );
-
         ctx.filter = 'saturate(0.75) contrast(1.1)';
         ctx.drawImage(img, 0, 0, myCanvas.width, myCanvas.height);
-        ctx.drawImage(img2, myCanvas.width - (myCanvas.width*0.2) - 10, myCanvas.width - (myCanvas.width*0.2*.25) - 10, myCanvas.width*0.2, myCanvas.width*0.2*.25);
-      };
-
-      function getObjectFitSize(
-        contains /* true = contain, false = cover */,
-        containerWidth,
-        containerHeight,
-        width,
-        height
-      ) {
-        var doRatio = width / height;
-        var cRatio = containerWidth / containerHeight;
-        var targetWidth = 0;
-        var targetHeight = 0;
-        var test = contains ? doRatio > cRatio : doRatio < cRatio;
-
-        if (test) {
-          targetWidth = containerWidth;
-          targetHeight = targetWidth / doRatio;
-        } else {
-          targetHeight = containerHeight;
-          targetWidth = targetHeight * doRatio;
-        }
-
-        return {
-          width: targetWidth,
-          height: targetHeight,
-          x: (containerWidth - targetWidth) / 2,
-          y: (containerHeight - targetHeight) / 2
-        };
+        ctx.drawImage(img2, myCanvas.width-bw, myCanvas.height-bh, myCanvas.width-10, myCanvas.height-10);
       };
       $('#dl-img').show();
       dlImg();
@@ -195,9 +153,9 @@
       var canvas = document.getElementById('dl-img');
       image = canvas.toDataURL("image/png").replace('image/png', 'image/octet-stream');
       var link = document.createElement('a');
-      link.download = 'twitterImg.png';
+      link.download = `twit-pic.png`;
       link.href = image;
       link.click();
-    }
+    } 
   </script>
 </html>
