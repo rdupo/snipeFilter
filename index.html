@@ -47,7 +47,7 @@
         var bw = dw * 0.15;
         var bh = bw * .25;
         $('#cmyk, #dl-img').attr('height',dh).attr('width',dw);
-        $('#cmyk').css({'left':dw-bw-10+'px', 'top':170+dh-bh});
+        $('#cmyk').css({'left':calc(dw-bw-10)+'px', 'top':calc(170+dh-bh)+'px'});
         $('#cmyk>img').css({'width':bw, 'height':bh, 'display':'inline'});
       }, 50);
       
